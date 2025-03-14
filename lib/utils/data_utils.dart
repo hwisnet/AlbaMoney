@@ -1,9 +1,30 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 class DataUtils {
   static final width = Get.width;
   static final height = Get.height;
+
+  static Color getWeekdayColor(int weekday) {
+    switch (weekday) {
+      case 1:
+        return Colors.black;
+      case 2:
+        return Colors.black;
+      case 3:
+        return Colors.black;
+      case 4:
+        return Colors.black;
+      case 5:
+        return Colors.black;
+      case 6:
+        return Colors.blue;
+      case 7:
+        return Colors.red;
+    }
+    return Colors.black;
+  }
 
   static String convertWeekdayToString(int weekday) {
     switch (weekday) {
@@ -143,12 +164,6 @@ class DataUtils {
           microsecond: 0,
         ));
     var time = difference.inMinutes - _breakTime;
-
-    print(time);
-    print(albaDays.length);
-    print(_albaPay);
-
-    print(((time / 60) * albaDays.length * _albaPay * 4.34).toInt());
 
     return ((time / 60) * albaDays.length * _albaPay * 4.34).toInt();
   }

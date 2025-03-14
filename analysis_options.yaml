@@ -9,6 +9,7 @@
 # packages, and plugins designed to encourage good coding practices.
 analyzer:
   errors:
+    deprecated_member_use: ignore
     invalid_use_of_protected_member: ignore
     must_be_immutable: ignore
     no_leading_underscores_for_local_identifiers: ignore

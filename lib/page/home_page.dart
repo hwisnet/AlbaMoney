@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/colors/colors.dart';
 import 'package:flutter_project/component/alba_calendar.dart';
-import 'package:flutter_project/component/alba_card.dart';
-import 'package:flutter_project/component/alba_list.dart';
-import 'package:flutter_project/controller/alba_add_controller.dart';
+import 'package:flutter_project/component/alba_card_list.dart';
 import 'package:flutter_project/controller/home_controller.dart';
-import 'package:flutter_project/page/alba_add_page.dart';
+import 'package:flutter_project/styles/text_styles.dart';
 import 'package:flutter_project/utils/data_utils.dart';
 import 'package:get/get.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
@@ -17,92 +15,153 @@ class HomePage extends GetView<HomeController> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: SlidingUpPanel(
-            minHeight: 500,
-            maxHeight: DataUtils.height * 0.7,
-            panel: Column(
+        child: Container(
+          padding: EdgeInsets.symmetric(
+              horizontal: DataUtils.width * 0.05,
+              vertical: DataUtils.height * 0.025),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Obx(() => AlbaCalendar(
-                      albaList: controller.albaList.value,
-                      albaSchedules: controller.albaSchedules.value,
-                      focusedDay: controller.focusedDay.value,
-                      selectedDay: controller.selectedDay.value,
-                      onDaySelected: controller.onDaySelected,
-                    )),
-                SizedBox(height: DataUtils.height * 0.01),
-                _addAlbaButton(),
-                SizedBox(height: DataUtils.height * 0.01),
-                Obx(() => AlbaList(
-                      albaList: controller.albaList.value,
-                      albaSchedules: controller.albaSchedules.value,
-                      focusedDay: controller.focusedDay.value,
-                      selectedDay: controller.selectedDay.value,
-                      onDaySelected: controller.onDaySelected,
-                    )),
+                _header(),
+                SizedBox(height: DataUtils.height * 0.025),
+                _monthlyPay(),
+                SizedBox(height: DataUtils.height * 0.025),
+                _monthlyCalendar(),
+                SizedBox(height: DataUtils.height * 0.025),
               ],
             ),
-            body: Container(
-              padding: EdgeInsets.symmetric(horizontal: DataUtils.width * 0.05),
-              child: Column(
-                children: [
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Icon(Icons.notifications_outlined, size: 25),
-                      Icon(Icons.settings_outlined, size: 25),
-                    ],
-                  ),
-                  const SizedBox(height: 15.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      const Text('예상 월급',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                      const SizedBox(width: 10.0),
-                      Builder(builder: (context) {
-                        final today = controller.currentDay;
-                        final firstDay = DataUtils.getFirstDay(today);
-                        final lastDay = DataUtils.getLastDay(today);
-                        return Text(
-                          '(${firstDay.month}월 ${firstDay.day}일 ~ ${lastDay.month}월 ${lastDay.day}일)',
-                          style:
-                              const TextStyle(color: Colors.grey, fontSize: 15),
-                        );
-                      })
-                    ],
-                  ),
-                  const SizedBox(height: 15.0),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text('0원',
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                ],
-              ),
-            )),
+          ),
+        ),
+      ),
+      bottomNavigationBar: _bottomNavBar(),
+    );
+  }
+
+  Widget _bottomNavBar() {
+    final items = [
+      const BottomNavigationBarItem(
+          activeIcon: Icon(
+            Icons.home,
+            color: main_color,
+          ),
+          icon: Icon(Icons.home, color: sub_grey_color),
+          label: '홈'),
+      const BottomNavigationBarItem(
+          activeIcon: Icon(
+            Icons.home,
+            color: main_color,
+          ),
+          icon: Icon(Icons.person, color: sub_grey_color),
+          label: '커뮤니티')
+    ];
+
+    return Obx(() => BottomNavigationBar(
+        onTap: (index) {
+          controller.bottomNavBarIndex(index);
+        },
+        currentIndex: controller.bottomNavBarIndex.value,
+        items: items));
+  }
+
+  Widget _header() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text('알바머니', style: w900.copyWith(color: main_color, fontSize: 30)),
+        const Icon(Icons.notifications, color: main_grey_color, size: 30),
+      ],
+    );
+  }
+
+  Widget _monthlyPay() {
+    return Container(
+      width: DataUtils.width,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+              blurRadius: 5.0,
+              color: background_grey_color,
+              offset: Offset(0, 5),
+              spreadRadius: 0,
+            )
+          ],
+          color: Colors.white),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: DataUtils.width * 0.05,
+                vertical: DataUtils.height * 0.025),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('이번 달 예상 월급',
+                    style: w500.copyWith(color: sub_grey_color, fontSize: 15)),
+                SizedBox(height: DataUtils.height * 0.01),
+                Text('0원', style: w700.copyWith(fontSize: 30)),
+              ],
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            width: DataUtils.width,
+            height: DataUtils.height * 0.05,
+            decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: background_grey_color)),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20))),
+            child: Text('내역 확인하기',
+                style: w700.copyWith(color: main_color, fontSize: 15)),
+          )
+        ],
       ),
     );
   }
 
-  Widget _addAlbaButton() {
+  Widget _monthlyCalendar() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: DataUtils.width * 0.05),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+      width: DataUtils.width,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+              blurRadius: 5.0,
+              color: background_grey_color,
+              offset: Offset(0, 5),
+              spreadRadius: 0,
+            )
+          ],
+          color: Colors.white),
+      child: Column(
         children: [
-          GestureDetector(
-            onTap: () async {
-              Get.put(AlbaAddController());
-              Get.to(() => AlbaAddPage());
-            },
-            child:
-                const Text('+ 알바 등록하기', style: TextStyle(color: Colors.blue)),
-          ),
+          Obx(() => AlbaCalendar(
+                albaList: controller.albaList.value,
+                albaSchedules: controller.albaSchedules.value,
+                focusedDay: controller.focusedDay.value,
+                selectedDay: controller.selectedDay.value,
+                onDaySelected: controller.onDaySelected,
+              )),
+          SizedBox(height: DataUtils.height * 0.025),
+          Obx(() => AlbaCardList(
+                albaSchedules: controller.albaSchedules.value,
+                selectedDay: controller.selectedDay.value,
+              )),
+          Container(
+            alignment: Alignment.center,
+            width: DataUtils.width,
+            height: DataUtils.height * 0.05,
+            decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: background_grey_color)),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(20))),
+            child: Text('일정 관리하기',
+                style: w700.copyWith(color: main_color, fontSize: 15)),
+          )
         ],
       ),
     );
