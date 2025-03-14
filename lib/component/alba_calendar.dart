@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/colors/colors.dart';
 import 'package:flutter_project/model/alba_model.dart';
+import 'package:flutter_project/styles/text_styles.dart';
+import 'package:flutter_project/utils/data_utils.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AlbaCalendar extends StatefulWidget {
@@ -40,9 +43,10 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
               TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
       calendarBuilders: CalendarBuilders(
         defaultBuilder: _defaultBuilder,
-        selectedBuilder: _selectedBuilder,
-        todayBuilder: _defaultBuilder,
         outsideBuilder: _defaultBuilder,
+        todayBuilder: _defaultBuilder,
+        dowBuilder: _dowBuilder,
+        selectedBuilder: _selectedBuilder,
       ),
     );
   }
@@ -55,6 +59,7 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
         Center(
           child: Text(
             '${day.day}',
+            style: w500,
           ),
         ),
         Align(
@@ -65,7 +70,7 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
                   ? Container(
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.red,
+                        color: main_color,
                       ),
                       width: 5,
                       height: 5,
@@ -84,7 +89,7 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
         Center(
           child: Text(
             '${day.day}',
-            style: const TextStyle(color: Colors.red),
+            style: w700.copyWith(color: main_color),
           ),
         ),
         Align(
@@ -95,7 +100,7 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
                   ? Container(
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.red,
+                        color: main_color,
                       ),
                       width: 5,
                       height: 5,
@@ -104,5 +109,12 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
         )
       ],
     );
+  }
+
+  Widget _dowBuilder(BuildContext context, DateTime day) {
+    return Center(
+        child: Text(DataUtils.convertWeekdayToString(day.weekday),
+            style:
+                w500.copyWith(color: DataUtils.getWeekdayColor(day.weekday))));
   }
 }

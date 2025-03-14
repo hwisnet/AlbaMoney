@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 class HomeController extends GetxController {
   static HomeController get to => Get.find();
 
+  Rx<int> bottomNavBarIndex = 0.obs;
+
   Rx<Size> calendarHeaderSize = Size.zero.obs;
   Rx<Size> calendarSize = Size.zero.obs;
 

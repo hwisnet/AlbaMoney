@@ -1,35 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/colors/colors.dart';
 import 'package:flutter_project/model/alba_model.dart';
+import 'package:flutter_project/styles/text_styles.dart';
+import 'package:flutter_project/utils/data_utils.dart';
 import 'package:intl/intl.dart';
 
 class AlbaCard extends StatelessWidget {
   AlbaModel albaModel;
-  DateTime selectedDay;
 
   AlbaCard({
     super.key,
     required this.albaModel,
-    required this.selectedDay,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 90.0,
-      decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.grey))),
-      margin: const EdgeInsets.symmetric(vertical: 10.0),
+      height: DataUtils.height * 0.1,
+      decoration: BoxDecoration(
+          border: Border.all(color: background_grey_color),
+          borderRadius: BorderRadius.circular(20)),
+      padding: EdgeInsets.symmetric(horizontal: DataUtils.width * 0.05),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Checkbox(
-              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              visualDensity: const VisualDensity(
-                horizontal: VisualDensity.minimumDensity,
-                vertical: VisualDensity.minimumDensity,
-              ),
-              value: false,
-              onChanged: (value) {}),
-          const SizedBox(width: 20.0),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,27 +32,28 @@ class AlbaCard extends StatelessWidget {
                 children: [
                   Text(
                     DateFormat('HH:mm').format(albaModel.startTime),
-                    style: const TextStyle(fontSize: 15.0),
+                    style: w500.copyWith(fontSize: 15),
                   ),
-                  const SizedBox(width: 5.0),
-                  const Text(
+                  SizedBox(width: DataUtils.width * 0.01),
+                  Text(
                     '-',
-                    style: TextStyle(fontSize: 20.0),
+                    style: w500.copyWith(fontSize: 15),
                   ),
-                  const SizedBox(width: 5.0),
+                  SizedBox(width: DataUtils.width * 0.01),
                   Text(
                     DateFormat('HH:mm').format(albaModel.endTime),
+                    style: w500.copyWith(fontSize: 15),
                   ),
-                  const SizedBox(width: 10),
                 ],
               ),
               Text(
                 albaModel.albaPlace,
-                style: const TextStyle(
-                    fontSize: 20.0, fontWeight: FontWeight.bold),
+                style: w700.copyWith(fontSize: 25),
               ),
             ],
-          )
+          ),
+          Icon(Icons.check_circle_outline_rounded,
+              color: sub_grey_color, size: DataUtils.width * 0.1)
         ],
       ),
     );
