@@ -3,9 +3,13 @@ import 'package:flutter_project/colors/colors.dart';
 import 'package:flutter_project/component/alba_calendar.dart';
 import 'package:flutter_project/component/alba_card_list.dart';
 import 'package:flutter_project/controller/home_controller.dart';
+import 'package:flutter_project/controller/sqflite_controller.dart';
+import 'package:flutter_project/page/history_page.dart';
+import 'package:flutter_project/page/schedule_page.dart';
 import 'package:flutter_project/styles/text_styles.dart';
 import 'package:flutter_project/utils/data_utils.dart';
 import 'package:get/get.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
@@ -29,6 +33,11 @@ class HomePage extends GetView<HomeController> {
                 SizedBox(height: DataUtils.height * 0.025),
                 _monthlyCalendar(),
                 SizedBox(height: DataUtils.height * 0.025),
+                ElevatedButton(
+                    onPressed: () async {
+                      SqfliteController.to.deleteDatabase();
+                    },
+                    child: const Text('DB 초기화'))
               ],
             ),
           ),
@@ -105,17 +114,23 @@ class HomePage extends GetView<HomeController> {
               ],
             ),
           ),
-          Container(
-            alignment: Alignment.center,
-            width: DataUtils.width,
-            height: DataUtils.height * 0.05,
-            decoration: const BoxDecoration(
-                border: Border(top: BorderSide(color: background_grey_color)),
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20))),
-            child: Text('내역 확인하기',
-                style: w700.copyWith(color: main_color, fontSize: 15)),
+          GestureDetector(
+            onTap: () {
+              Get.to(
+                  () => HistoryPage(albaSchedules: controller.albaSchedules));
+            },
+            child: Container(
+              alignment: Alignment.center,
+              width: DataUtils.width,
+              height: DataUtils.height * 0.05,
+              decoration: const BoxDecoration(
+                  border: Border(top: BorderSide(color: background_grey_color)),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20))),
+              child: Text('내역 확인하기',
+                  style: w700.copyWith(color: main_color, fontSize: 15)),
+            ),
           )
         ],
       ),
@@ -138,29 +153,46 @@ class HomePage extends GetView<HomeController> {
           color: Colors.white),
       child: Column(
         children: [
-          Obx(() => AlbaCalendar(
-                albaList: controller.albaList.value,
-                albaSchedules: controller.albaSchedules.value,
+          Obx(() {
+            if (controller.isLoading.value) {
+              return const CircularProgressIndicator();
+            } else {
+              return AlbaCalendar(
+                calendarFormat: CalendarFormat.week,
                 focusedDay: controller.focusedDay.value,
                 selectedDay: controller.selectedDay.value,
+                albaSchedules: controller.albaSchedules.value,
                 onDaySelected: controller.onDaySelected,
-              )),
+              );
+            }
+          }),
           SizedBox(height: DataUtils.height * 0.025),
-          Obx(() => AlbaCardList(
+          Obx(() {
+            if (controller.isLoading.value) {
+              return const CircularProgressIndicator();
+            } else {
+              return AlbaCardList(
                 albaSchedules: controller.albaSchedules.value,
                 selectedDay: controller.selectedDay.value,
-              )),
-          Container(
-            alignment: Alignment.center,
-            width: DataUtils.width,
-            height: DataUtils.height * 0.05,
-            decoration: const BoxDecoration(
-                border: Border(top: BorderSide(color: background_grey_color)),
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20))),
-            child: Text('일정 관리하기',
-                style: w700.copyWith(color: main_color, fontSize: 15)),
+              );
+            }
+          }),
+          GestureDetector(
+            onTap: () {
+              Get.to(() => SchedulePage(albaList: controller.albaList));
+            },
+            child: Container(
+              alignment: Alignment.center,
+              width: DataUtils.width,
+              height: DataUtils.height * 0.05,
+              decoration: const BoxDecoration(
+                  border: Border(top: BorderSide(color: background_grey_color)),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(20),
+                      bottomRight: Radius.circular(20))),
+              child: Text('일정 관리하기',
+                  style: w700.copyWith(color: main_color, fontSize: 15)),
+            ),
           )
         ],
       ),

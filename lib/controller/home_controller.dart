@@ -27,6 +27,8 @@ class HomeController extends GetxController {
     7: [],
   }.obs;
 
+  RxBool isLoading = true.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -34,13 +36,16 @@ class HomeController extends GetxController {
   }
 
   Future<void> initAlbaList() async {
-    albaList(await SqfliteRepository.readAlbaData());
+    isLoading(true);
+    List<AlbaModel> loadedAlbaList = await SqfliteRepository.readAlbaData();
+    albaList(loadedAlbaList);
 
     for (var alba in albaList) {
       for (var day in alba.albaDayList) {
         albaSchedules[DataUtils.converStringToWeekday(day)]?.add(alba);
       }
     }
+    isLoading(false);
   }
 
   void onDaySelected(DateTime selectedDay, DateTime focusedDay) {

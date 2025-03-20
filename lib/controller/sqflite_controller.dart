@@ -31,8 +31,14 @@ class SqfliteController extends GetxService {
         ${AlbaDbInfo.startDate} text not null,
         ${AlbaDbInfo.startTime} text not null,
         ${AlbaDbInfo.endTime} text not null,
-        ${AlbaDbInfo.hourlyRate} integer not null
+        ${AlbaDbInfo.albaPay} integer not null,
+        ${AlbaDbInfo.albaBreakTime} integer not null,
+        ${AlbaDbInfo.albaHolidayPay} bool not null
       )
     ''');
+  }
+
+  Future<int> deleteDatabase() async {
+    return await _database.delete(AlbaDbInfo.table);
   }
 }
