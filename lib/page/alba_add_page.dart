@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_project/colors/colors.dart';
 import 'package:flutter_project/controller/alba_add_controller.dart';
 import 'package:flutter_project/styles/text_styles.dart';
 import 'package:flutter_project/utils/data_utils.dart';
@@ -140,13 +141,13 @@ class AlbaAddPage extends GetView<AlbaAddController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('근무지'),
+          Text('근무지', style: w500.copyWith(fontSize: 15)),
           Container(
               width: DataUtils.width * 0.45,
               height: DataUtils.height * 0.045,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey.withOpacity(0.5),
+                border: Border.all(color: main_color),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                 child: TextField(
@@ -167,20 +168,20 @@ class AlbaAddPage extends GetView<AlbaAddController> {
     return Column(
       children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text('근무 시작 날짜'),
+          Text('근무 시작 날짜', style: w500.copyWith(fontSize: 15)),
           GestureDetector(
             onTap: () => controller.onEditToggle('startDate'),
             child: Container(
               width: DataUtils.width * 0.45,
               height: DataUtils.height * 0.045,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey.withOpacity(0.5),
+                border: Border.all(color: main_color),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                   child: Obx(() => Text(
                       DataUtils.dateFormatter(controller.selectedDate.value),
-                      style: w500))),
+                      style: w500.copyWith(fontSize: 15)))),
             ),
           )
         ]),
@@ -195,20 +196,20 @@ class AlbaAddPage extends GetView<AlbaAddController> {
     return Column(
       children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text('근무 시작 시간'),
+          Text('근무 시작 시간', style: w500.copyWith(fontSize: 15)),
           GestureDetector(
             onTap: () => controller.onEditToggle('startTime'),
             child: Container(
               width: DataUtils.width * 0.22,
               height: DataUtils.height * 0.045,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey.withOpacity(0.5),
+                border: Border.all(color: main_color),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                   child: Obx(() => Text(
                       DataUtils.timeFormatter(controller.startTime.value),
-                      style: w500))),
+                      style: w500.copyWith(fontSize: 15)))),
             ),
           )
         ]),
@@ -223,20 +224,20 @@ class AlbaAddPage extends GetView<AlbaAddController> {
     return Column(
       children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text('근무 종료 시간'),
+          Text('근무 종료 시간', style: w500.copyWith(fontSize: 15)),
           GestureDetector(
             onTap: () => controller.onEditToggle('endTime'),
             child: Container(
               width: DataUtils.width * 0.22,
               height: DataUtils.height * 0.045,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey.withOpacity(0.5),
+                border: Border.all(color: main_color),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                   child: Obx(() => Text(
                       DataUtils.timeFormatter(controller.endTime.value),
-                      style: w500))),
+                      style: w500.copyWith(fontSize: 15)))),
             ),
           )
         ]),
@@ -251,7 +252,7 @@ class AlbaAddPage extends GetView<AlbaAddController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('근무 요일'),
+        Text('근무 요일', style: w500.copyWith(fontSize: 15)),
         SizedBox(height: DataUtils.height * 0.01),
         GridView.builder(
             shrinkWrap: true,
@@ -270,20 +271,24 @@ class AlbaAddPage extends GetView<AlbaAddController> {
                 child: Obx(() => Container(
                     decoration: BoxDecoration(
                       color: controller.albaDays.contains(weekdays[index])
-                          ? Colors.black
-                          : Colors.grey.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(5.0),
+                          ? main_color
+                          : Colors.white,
+                      border: Border.all(
+                          color: controller.albaDays.contains(weekdays[index])
+                              ? Colors.white
+                              : main_color),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10.0, vertical: 5.0),
                     child: Center(
                         child: Text(weekdays[index],
-                            style: TextStyle(
+                            style: w500.copyWith(
+                                fontSize: 15,
                                 color: controller.albaDays
                                         .contains(weekdays[index])
                                     ? Colors.white
-                                    : Colors.black,
-                                fontSize: 14))))),
+                                    : Colors.black))))),
               );
             }),
       ],
@@ -295,13 +300,13 @@ class AlbaAddPage extends GetView<AlbaAddController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('시급'),
+          Text('시급', style: w500.copyWith(fontSize: 15)),
           Container(
               width: DataUtils.width * 0.22,
               height: DataUtils.height * 0.045,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey.withOpacity(0.5),
+                border: Border.all(color: main_color),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                 child: TextField(
@@ -325,13 +330,13 @@ class AlbaAddPage extends GetView<AlbaAddController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('일일 휴식 시간'),
+          Text('일일 휴식 시간', style: w500.copyWith(fontSize: 15)),
           Container(
               width: DataUtils.width * 0.22,
               height: DataUtils.height * 0.045,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey.withOpacity(0.5),
+                border: Border.all(color: main_color),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                 child: TextField(
@@ -353,7 +358,7 @@ class AlbaAddPage extends GetView<AlbaAddController> {
     return Column(
       children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text('주휴 수당'),
+          Text('주휴 수당', style: w500.copyWith(fontSize: 15)),
           Row(
             children: [
               GestureDetector(
@@ -363,17 +368,19 @@ class AlbaAddPage extends GetView<AlbaAddController> {
                       width: DataUtils.width * 0.22,
                       height: DataUtils.height * 0.045,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
+                        border: Border.all(color: main_color),
+                        borderRadius: BorderRadius.circular(5),
                         color: controller.holidayPay.value
-                            ? Colors.grey.withOpacity(0.5)
-                            : Colors.black,
+                            ? Colors.white
+                            : main_color,
                       ),
                       child: Center(
                           child: Text('미포함',
                               style: w500.copyWith(
                                   color: controller.holidayPay.value
                                       ? Colors.black
-                                      : Colors.white)))),
+                                      : Colors.white,
+                                  fontSize: 15)))),
                 ),
               ),
               SizedBox(width: DataUtils.width * 0.01),
@@ -384,17 +391,19 @@ class AlbaAddPage extends GetView<AlbaAddController> {
                       width: DataUtils.width * 0.22,
                       height: DataUtils.height * 0.045,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5.0),
+                        border: Border.all(color: main_color),
+                        borderRadius: BorderRadius.circular(5),
                         color: controller.holidayPay.value
-                            ? Colors.black
-                            : Colors.grey.withOpacity(0.5),
+                            ? main_color
+                            : Colors.white,
                       ),
                       child: Center(
                           child: Text('포함',
                               style: w500.copyWith(
                                   color: controller.holidayPay.value
                                       ? Colors.white
-                                      : Colors.black)))),
+                                      : Colors.black,
+                                  fontSize: 15)))),
                 ),
               ),
             ],
@@ -426,11 +435,11 @@ class AlbaAddPage extends GetView<AlbaAddController> {
           height: DataUtils.height * 0.05,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5.0),
-            color: Colors.blue,
+            color: main_color,
           ),
           child: Center(
-              child:
-                  Text('예상 월급 계산', style: w500.copyWith(color: Colors.white)))),
+              child: Text('예상 월급 계산',
+                  style: w700.copyWith(color: Colors.white, fontSize: 15)))),
     );
   }
 

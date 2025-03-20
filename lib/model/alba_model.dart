@@ -5,17 +5,20 @@ class AlbaModel {
   DateTime startDate;
   DateTime startTime;
   DateTime endTime;
-  int hourlyRate;
+  int albaPay;
+  int albaBreakTime;
+  bool albaHolidayPay;
 
-  AlbaModel({
-    this.id,
-    required this.albaPlace,
-    required this.albaDays,
-    required this.startDate,
-    required this.startTime,
-    required this.endTime,
-    required this.hourlyRate,
-  });
+  AlbaModel(
+      {this.id,
+      required this.albaPlace,
+      required this.albaDays,
+      required this.startDate,
+      required this.startTime,
+      required this.endTime,
+      required this.albaPay,
+      required this.albaBreakTime,
+      required this.albaHolidayPay});
 
   Map<String, dynamic> toMap() {
     return {
@@ -25,29 +28,37 @@ class AlbaModel {
       AlbaDbInfo.startDate: startDate.toIso8601String(),
       AlbaDbInfo.startTime: startTime.toIso8601String(),
       AlbaDbInfo.endTime: endTime.toIso8601String(),
-      AlbaDbInfo.hourlyRate: hourlyRate,
+      AlbaDbInfo.albaPay: albaPay,
+      AlbaDbInfo.albaBreakTime: albaBreakTime,
+      AlbaDbInfo.albaHolidayPay: albaHolidayPay,
     };
   }
 
   factory AlbaModel.fromJson(Map<String, dynamic> json) {
     return AlbaModel(
-        id: json[AlbaDbInfo.id] as int,
-        albaPlace: json[AlbaDbInfo.albaPlace] as String,
-        albaDays: json[AlbaDbInfo.albaDays] as String,
-        startDate: DateTime.parse(json[AlbaDbInfo.startDate] as String),
-        startTime: DateTime.parse(json[AlbaDbInfo.startTime] as String),
-        endTime: DateTime.parse(json[AlbaDbInfo.endTime] as String),
-        hourlyRate: json[AlbaDbInfo.hourlyRate] as int);
+      id: json[AlbaDbInfo.id] as int,
+      albaPlace: json[AlbaDbInfo.albaPlace] as String,
+      albaDays: json[AlbaDbInfo.albaDays] as String,
+      startDate: DateTime.parse(json[AlbaDbInfo.startDate] as String),
+      startTime: DateTime.parse(json[AlbaDbInfo.startTime] as String),
+      endTime: DateTime.parse(json[AlbaDbInfo.endTime] as String),
+      albaPay: json[AlbaDbInfo.albaPay] as int,
+      albaBreakTime: json[AlbaDbInfo.albaBreakTime] as int,
+      albaHolidayPay: json[AlbaDbInfo.albaHolidayPay] as bool,
+    );
   }
 
-  AlbaModel clone(
-      {int? id,
-      String? albaPlace,
-      String? albaDays,
-      DateTime? startDate,
-      DateTime? startTime,
-      DateTime? endTime,
-      int? hourlyRate}) {
+  AlbaModel clone({
+    int? id,
+    String? albaPlace,
+    String? albaDays,
+    DateTime? startDate,
+    DateTime? startTime,
+    DateTime? endTime,
+    int? albaPay,
+    int? albaBreakTime,
+    bool? albaHolidayPay,
+  }) {
     return AlbaModel(
       id: id ?? this.id,
       albaPlace: albaPlace ?? this.albaPlace,
@@ -55,7 +66,9 @@ class AlbaModel {
       startDate: startDate ?? this.startDate,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
-      hourlyRate: hourlyRate ?? this.hourlyRate,
+      albaPay: albaPay ?? this.albaPay,
+      albaBreakTime: albaBreakTime ?? this.albaBreakTime,
+      albaHolidayPay: albaHolidayPay ?? this.albaHolidayPay,
     );
   }
 
@@ -76,5 +89,7 @@ class AlbaDbInfo {
   static String startDate = 'startDate';
   static String startTime = 'startTime';
   static String endTime = 'endTime';
-  static String hourlyRate = 'hourlyRate';
+  static String albaPay = 'albaPay';
+  static String albaBreakTime = 'albaBreakTime';
+  static String albaHolidayPay = 'albaHolidayPay';
 }

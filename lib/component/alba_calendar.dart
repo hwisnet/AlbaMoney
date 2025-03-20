@@ -6,18 +6,18 @@ import 'package:flutter_project/utils/data_utils.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AlbaCalendar extends StatefulWidget {
-  List<AlbaModel> albaList;
-  Map<int, List<AlbaModel>> albaSchedules;
+  CalendarFormat calendarFormat;
   DateTime focusedDay;
   DateTime selectedDay;
+  Map<int, List<AlbaModel>> albaSchedules;
   Function(DateTime, DateTime) onDaySelected;
 
   AlbaCalendar(
       {super.key,
-      required this.albaList,
-      required this.albaSchedules,
+      required this.calendarFormat,
       required this.focusedDay,
       required this.selectedDay,
+      required this.albaSchedules,
       required this.onDaySelected});
 
   @override
@@ -29,18 +29,18 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
   Widget build(BuildContext context) {
     return TableCalendar(
       locale: 'ko_KR',
-      calendarFormat: CalendarFormat.week,
+      calendarFormat: widget.calendarFormat,
       daysOfWeekHeight: 30,
       focusedDay: widget.focusedDay,
       firstDay: DateTime.utc(2025, 1, 1),
       lastDay: DateTime.utc(2025, 12, 31),
       onDaySelected: widget.onDaySelected,
       selectedDayPredicate: (day) => isSameDay(widget.selectedDay, day),
-      headerStyle: const HeaderStyle(
+      headerStyle: HeaderStyle(
           formatButtonVisible: false,
           titleCentered: true,
-          titleTextStyle:
-              TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)),
+          titleTextStyle: w500.copyWith(fontSize: 20)),
+      calendarStyle: const CalendarStyle(outsideDaysVisible: false),
       calendarBuilders: CalendarBuilders(
         defaultBuilder: _defaultBuilder,
         outsideBuilder: _defaultBuilder,
