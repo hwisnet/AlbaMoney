@@ -29,13 +29,19 @@ class _AlbaCardListState extends State<AlbaCardList> {
           Text('일정', style: w700.copyWith(fontSize: 20)),
           ListView.builder(
             shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
             padding: EdgeInsets.only(
                 top: DataUtils.height * 0.01, bottom: DataUtils.height * 0.025),
             itemCount: widget.albaSchedules[widget.selectedDay.weekday]!.length,
             itemBuilder: (context, index) {
-              return AlbaCard(
-                albaModel:
-                    widget.albaSchedules[widget.selectedDay.weekday]![index],
+              return Column(
+                children: [
+                  AlbaCard(
+                    albaModel: widget
+                        .albaSchedules[widget.selectedDay.weekday]![index],
+                  ),
+                  SizedBox(height: DataUtils.height * 0.01),
+                ],
               );
             },
           ),

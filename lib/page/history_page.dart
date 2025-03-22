@@ -31,7 +31,7 @@ class HistoryPage extends GetView<HomeController> {
               albaSchedules: controller.albaSchedules,
               onDaySelected: controller.onDaySelected)),
           SizedBox(height: DataUtils.height * 0.025),
-          _historyList(),
+          Obx(() => _historyList()),
         ],
       )),
     );
@@ -91,7 +91,7 @@ class HistoryPage extends GetView<HomeController> {
                 final pay = albaModel.albaPay;
                 final time =
                     albaModel.endTime.difference(albaModel.startTime).inHours;
-                return Text('${pay * time}원',
+                return Text('${int.parse(pay) * time}원',
                     style: w500.copyWith(fontSize: 25));
               })
             ],

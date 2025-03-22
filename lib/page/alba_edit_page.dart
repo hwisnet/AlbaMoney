@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_project/colors/colors.dart';
 import 'package:flutter_project/model/alba_model.dart';
 import 'package:flutter_project/styles/text_styles.dart';
 import 'package:flutter_project/utils/data_utils.dart';
@@ -31,7 +33,7 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
     _albaPayController =
         TextEditingController(text: widget.albaModel.albaPay.toString());
     _albaBreakTimeController =
-        TextEditingController(text: widget.albaModel.albaBreakTime.toString());
+        TextEditingController(text: widget.albaModel.breakTime.toString());
   }
 
   void update() => setState(() {});
@@ -141,8 +143,7 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
           },
           child: const Icon(Icons.arrow_back),
         ),
-        title: const Text('근무지 등록',
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold)));
+        title: Text('근무지 수정', style: w500.copyWith(fontSize: 20)));
   }
 
   Widget _albaPlace() {
@@ -150,22 +151,25 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('근무지'),
+          Text('근무지', style: w500.copyWith(fontSize: 15)),
           Container(
               width: DataUtils.width * 0.45,
               height: DataUtils.height * 0.045,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey.withOpacity(0.5),
+                border: Border.all(color: main_color),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                 child: TextField(
                   controller: _albaPlaceController,
+                  cursorColor: main_color,
+                  cursorHeight: DataUtils.height * 0.025,
                   decoration: const InputDecoration(
                     isDense: true,
                     border: InputBorder.none,
                   ),
                   textAlign: TextAlign.center,
+                  style: w500.copyWith(fontSize: 15),
                 ),
               ))
         ],
@@ -177,20 +181,20 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
     return Column(
       children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text('근무 시작 날짜'),
+          Text('근무 시작 날짜', style: w500.copyWith(fontSize: 15)),
           GestureDetector(
             // onTap: () => controller.onEditToggle('startDate'),
             child: Container(
               width: DataUtils.width * 0.45,
               height: DataUtils.height * 0.045,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey.withOpacity(0.5),
+                border: Border.all(color: main_color),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                   child: Text(
                       DataUtils.dateFormatter(widget.albaModel.startDate),
-                      style: w500)),
+                      style: w500.copyWith(fontSize: 15))),
             ),
           )
         ]),
@@ -205,20 +209,20 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
     return Column(
       children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text('근무 시작 시간'),
+          Text('근무 시작 시간', style: w500.copyWith(fontSize: 15)),
           GestureDetector(
             // onTap: () => controller.onEditToggle('startTime'),
             child: Container(
               width: DataUtils.width * 0.22,
               height: DataUtils.height * 0.045,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey.withOpacity(0.5),
+                border: Border.all(color: main_color),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                   child: Text(
                       DataUtils.timeFormatter(widget.albaModel.startTime),
-                      style: w500)),
+                      style: w500.copyWith(fontSize: 15))),
             ),
           )
         ]),
@@ -233,19 +237,19 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
     return Column(
       children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text('근무 종료 시간'),
+          Text('근무 종료 시간', style: w500.copyWith(fontSize: 15)),
           GestureDetector(
             // onTap: () => controller.onEditToggle('endTime'),
             child: Container(
               width: DataUtils.width * 0.22,
               height: DataUtils.height * 0.045,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey.withOpacity(0.5),
+                border: Border.all(color: main_color),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
                   child: Text(DataUtils.timeFormatter(widget.albaModel.endTime),
-                      style: w500)),
+                      style: w500.copyWith(fontSize: 15))),
             ),
           )
         ]),
@@ -260,7 +264,7 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('근무 요일'),
+        Text('근무 요일', style: w500.copyWith(fontSize: 15)),
         SizedBox(height: DataUtils.height * 0.01),
         GridView.builder(
             shrinkWrap: true,
@@ -280,9 +284,14 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
                     decoration: BoxDecoration(
                       color:
                           widget.albaModel.albaDayList.contains(weekdays[index])
-                              ? Colors.black
-                              : Colors.grey.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(5.0),
+                              ? main_color
+                              : Colors.white,
+                      border: Border.all(
+                          color: widget.albaModel.albaDayList
+                                  .contains(weekdays[index])
+                              ? Colors.white
+                              : main_color),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     padding: const EdgeInsets.symmetric(
                         horizontal: 10.0, vertical: 5.0),
@@ -292,8 +301,8 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
                                 color: widget.albaModel.albaDayList
                                         .contains(weekdays[index])
                                     ? Colors.white
-                                    : Colors.black,
-                                fontSize: 14)))),
+                                    : sub_grey_color,
+                                fontSize: 15)))),
               );
             }),
       ],
@@ -305,24 +314,39 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('시급'),
+          Text('시급', style: w500.copyWith(fontSize: 15)),
           Container(
+              padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: DataUtils.width * 0.025),
               width: DataUtils.width * 0.22,
               height: DataUtils.height * 0.045,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey.withOpacity(0.5),
+                border: Border.all(color: main_color),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
-                child: TextField(
-                  controller: _albaPayController,
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    border: InputBorder.none,
-                  ),
-                  keyboardType: TextInputType.number,
-                  textAlign: TextAlign.center,
-                  // onChanged: controller.onAlbaPayChanged,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _albaPayController,
+                        cursorColor: main_color,
+                        cursorHeight: DataUtils.height * 0.025,
+                        decoration: const InputDecoration(
+                          isDense: true,
+                          border: InputBorder.none,
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        textAlign: TextAlign.end,
+                        style: w500.copyWith(fontSize: 15),
+                        // onChanged: controller.onAlbaPayChanged,
+                      ),
+                    ),
+                    Text('원', style: w500.copyWith(fontSize: 15)),
+                  ],
                 ),
               ))
         ],
@@ -335,23 +359,39 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('일일 휴식 시간'),
+          Text('일일 휴식 시간', style: w500.copyWith(fontSize: 15)),
           Container(
+              padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: DataUtils.width * 0.025),
               width: DataUtils.width * 0.22,
               height: DataUtils.height * 0.045,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(5.0),
-                color: Colors.grey.withOpacity(0.5),
+                border: Border.all(color: main_color),
+                borderRadius: BorderRadius.circular(5),
               ),
               child: Center(
-                child: TextField(
-                  controller: _albaBreakTimeController,
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    border: InputBorder.none,
-                  ),
-                  textAlign: TextAlign.center,
-                  // onChanged: controller.onBreakTimeChanged,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _albaBreakTimeController,
+                        cursorColor: main_color,
+                        cursorHeight: DataUtils.height * 0.025,
+                        decoration: const InputDecoration(
+                          isDense: true,
+                          border: InputBorder.none,
+                        ),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        textAlign: TextAlign.end,
+                        style: w500.copyWith(fontSize: 15),
+                        // onChanged: controller.onBreakTimeChanged,
+                      ),
+                    ),
+                    Text('분', style: w500.copyWith(fontSize: 15)),
+                  ],
                 ),
               ))
         ],
@@ -363,7 +403,7 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
     return Column(
       children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          const Text('주휴 수당'),
+          Text('주휴 수당', style: w500.copyWith(fontSize: 15)),
           Row(
             children: [
               GestureDetector(
@@ -372,17 +412,16 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
                     width: DataUtils.width * 0.22,
                     height: DataUtils.height * 0.045,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.0),
-                      color: _holidayPay
-                          ? Colors.grey.withOpacity(0.5)
-                          : Colors.black,
+                      border: Border.all(color: main_color),
+                      borderRadius: BorderRadius.circular(5),
+                      color: _holidayPay ? Colors.white : main_color,
                     ),
                     child: Center(
                         child: Text('미포함',
                             style: w500.copyWith(
-                                color: _holidayPay
-                                    ? Colors.black
-                                    : Colors.white)))),
+                                color:
+                                    _holidayPay ? sub_grey_color : main_color,
+                                fontSize: 15)))),
               ),
               SizedBox(width: DataUtils.width * 0.01),
               GestureDetector(
@@ -391,17 +430,16 @@ class _AlbaEditPageState extends State<AlbaEditPage> {
                     width: DataUtils.width * 0.22,
                     height: DataUtils.height * 0.045,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5.0),
-                      color: _holidayPay
-                          ? Colors.black
-                          : Colors.grey.withOpacity(0.5),
+                      border: Border.all(color: main_color),
+                      borderRadius: BorderRadius.circular(5),
+                      color: _holidayPay ? main_color : sub_grey_color,
                     ),
                     child: Center(
                         child: Text('포함',
                             style: w500.copyWith(
-                                color: _holidayPay
-                                    ? Colors.white
-                                    : Colors.black)))),
+                                color:
+                                    _holidayPay ? Colors.white : sub_grey_color,
+                                fontSize: 15)))),
               ),
             ],
           )
