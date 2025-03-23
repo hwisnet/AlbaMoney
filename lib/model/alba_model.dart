@@ -5,9 +5,9 @@ class AlbaModel {
   DateTime startDate;
   DateTime startTime;
   DateTime endTime;
-  int albaPay;
-  int albaBreakTime;
-  bool albaHolidayPay;
+  String albaPay;
+  String breakTime;
+  int holidayPay;
 
   AlbaModel(
       {this.id,
@@ -17,8 +17,8 @@ class AlbaModel {
       required this.startTime,
       required this.endTime,
       required this.albaPay,
-      required this.albaBreakTime,
-      required this.albaHolidayPay});
+      required this.breakTime,
+      required this.holidayPay});
 
   Map<String, dynamic> toMap() {
     return {
@@ -29,8 +29,8 @@ class AlbaModel {
       AlbaDbInfo.startTime: startTime.toIso8601String(),
       AlbaDbInfo.endTime: endTime.toIso8601String(),
       AlbaDbInfo.albaPay: albaPay,
-      AlbaDbInfo.albaBreakTime: albaBreakTime,
-      AlbaDbInfo.albaHolidayPay: albaHolidayPay,
+      AlbaDbInfo.breakTime: breakTime,
+      AlbaDbInfo.holidayPay: holidayPay,
     };
   }
 
@@ -42,9 +42,9 @@ class AlbaModel {
       startDate: DateTime.parse(json[AlbaDbInfo.startDate] as String),
       startTime: DateTime.parse(json[AlbaDbInfo.startTime] as String),
       endTime: DateTime.parse(json[AlbaDbInfo.endTime] as String),
-      albaPay: json[AlbaDbInfo.albaPay] as int,
-      albaBreakTime: json[AlbaDbInfo.albaBreakTime] as int,
-      albaHolidayPay: json[AlbaDbInfo.albaHolidayPay] as bool,
+      albaPay: json[AlbaDbInfo.albaPay] as String,
+      breakTime: json[AlbaDbInfo.breakTime] as String,
+      holidayPay: json[AlbaDbInfo.holidayPay] as int,
     );
   }
 
@@ -55,9 +55,9 @@ class AlbaModel {
     DateTime? startDate,
     DateTime? startTime,
     DateTime? endTime,
-    int? albaPay,
-    int? albaBreakTime,
-    bool? albaHolidayPay,
+    String? albaPay,
+    String? breakTime,
+    int? holidayPay,
   }) {
     return AlbaModel(
       id: id ?? this.id,
@@ -67,8 +67,8 @@ class AlbaModel {
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       albaPay: albaPay ?? this.albaPay,
-      albaBreakTime: albaBreakTime ?? this.albaBreakTime,
-      albaHolidayPay: albaHolidayPay ?? this.albaHolidayPay,
+      breakTime: breakTime ?? this.breakTime,
+      holidayPay: holidayPay ?? this.holidayPay,
     );
   }
 
@@ -90,6 +90,6 @@ class AlbaDbInfo {
   static String startTime = 'startTime';
   static String endTime = 'endTime';
   static String albaPay = 'albaPay';
-  static String albaBreakTime = 'albaBreakTime';
-  static String albaHolidayPay = 'albaHolidayPay';
+  static String breakTime = 'breakTime';
+  static String holidayPay = 'holidayPay';
 }

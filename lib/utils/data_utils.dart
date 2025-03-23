@@ -128,7 +128,7 @@ class DataUtils {
   }
 
   static String dateFormatter(DateTime date) {
-    return DateFormat('yyyy년 MM월 dd일 E요일', 'ko-kr').format(date);
+    return DateFormat('yy년 MM월 dd일 E요일', 'ko-kr').format(date);
   }
 
   static String timeFormatter(DateTime time) {
@@ -136,22 +136,9 @@ class DataUtils {
   }
 
   static int calculateMonthlyPay(DateTime startTime, DateTime endTime,
-      List<String> albaDays, String albaPay, String breakTime, bool allowance) {
-    int _albaPay;
-    int _breakTime;
-
-    if (albaPay == '') {
-      _albaPay = 0;
-    } else {
-      _albaPay = int.parse(albaPay);
-    }
-
-    if (breakTime == '') {
-      _breakTime = 0;
-    } else {
-      _breakTime = int.parse(breakTime);
-    }
-
+      List<String> albaDays, String albaPay, String breakTime) {
+    int _albaPay = int.parse(albaPay);
+    int _breakTime = int.parse(breakTime);
     var difference = endTime
         .copyWith(
           second: 0,
@@ -166,5 +153,29 @@ class DataUtils {
     var time = difference.inMinutes - _breakTime;
 
     return ((time / 60) * albaDays.length * _albaPay * 4.34).toInt();
+  }
+
+  static int calculatHolidayPay(DateTime startTime, DateTime endTime,
+      List<String> albaDays, String albaPay, String breakTime, int holidayPay) {
+    int _albaPay = int.parse(albaPay);
+    int _breakTime = int.parse(breakTime);
+    var difference = endTime
+        .copyWith(
+          second: 0,
+          millisecond: 0,
+          microsecond: 0,
+        )
+        .difference(startTime.copyWith(
+          second: 0,
+          millisecond: 0,
+          microsecond: 0,
+        ));
+    var time = difference.inMinutes - _breakTime;
+
+    if (holidayPay == 0) {
+      return 0;
+    }
+
+    return (((time / 60) * albaDays.length / 40) * 8 * _albaPay * 4.34).toInt();
   }
 }

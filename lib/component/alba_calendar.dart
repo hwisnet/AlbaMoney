@@ -66,16 +66,29 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
           alignment: Alignment.bottomCenter,
           child: Padding(
               padding: const EdgeInsets.only(bottom: 5),
-              child: widget.albaSchedules[day.weekday]!.isNotEmpty
-                  ? Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: main_color,
-                      ),
-                      width: 5,
-                      height: 5,
-                    )
-                  : Container()),
+              child: Builder(builder: (context) {
+                bool hasSchedules = false;
+                for (var schedule in widget.albaSchedules[day.weekday]!) {
+                  if (day.isAfter(schedule.startDate) ||
+                      day.toUtc() ==
+                          DateTime.utc(
+                              schedule.startDate.year,
+                              schedule.startDate.month,
+                              schedule.startDate.day)) {
+                    hasSchedules = true;
+                  }
+                }
+                return hasSchedules
+                    ? Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: main_color,
+                        ),
+                        width: 5,
+                        height: 5,
+                      )
+                    : Container();
+              })),
         )
       ],
     );
@@ -96,16 +109,29 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
           alignment: Alignment.bottomCenter,
           child: Padding(
               padding: const EdgeInsets.only(bottom: 5),
-              child: widget.albaSchedules[day.weekday]!.isNotEmpty
-                  ? Container(
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: main_color,
-                      ),
-                      width: 5,
-                      height: 5,
-                    )
-                  : Container()),
+              child: Builder(builder: (context) {
+                bool hasSchedules = false;
+                for (var schedule in widget.albaSchedules[day.weekday]!) {
+                  if (day.isAfter(schedule.startDate) ||
+                      day.toUtc() ==
+                          DateTime.utc(
+                              schedule.startDate.year,
+                              schedule.startDate.month,
+                              schedule.startDate.day)) {
+                    hasSchedules = true;
+                  }
+                }
+                return hasSchedules
+                    ? Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: main_color,
+                        ),
+                        width: 5,
+                        height: 5,
+                      )
+                    : Container();
+              })),
         )
       ],
     );
