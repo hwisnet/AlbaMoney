@@ -35,7 +35,7 @@ class HomePage extends GetView<HomeController> {
                 SizedBox(height: DataUtils.height * 0.025),
                 ElevatedButton(
                     onPressed: () async {
-                      SqfliteController.to.deleteColums();
+                      SqfliteController.to.deleteDB();
                     },
                     child: const Text('DB 초기화'))
               ],

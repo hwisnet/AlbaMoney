@@ -49,7 +49,7 @@ class HomeController extends GetxController {
   }
 
   void onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    this.focusedDay(focusedDay);
     this.selectedDay(selectedDay);
+    this.focusedDay(focusedDay);
   }
 }

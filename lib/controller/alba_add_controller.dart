@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 
 class AlbaAddController extends GetxController {
   Rx<TextEditingController> albaPlace = TextEditingController().obs;
-  Rx<DateTime> selectedDate = DateTime.now().obs;
   Rx<DateTime> startDate = DateTime.now().obs;
   Rx<DateTime> startTime = DateTime.now().copyWith(hour: 0, minute: 0).obs;
   Rx<DateTime> endTime = DateTime.now().copyWith(hour: 12, minute: 0).obs;
@@ -28,7 +27,7 @@ class AlbaAddController extends GetxController {
     'endTime': false,
   }.obs;
 
-  void addAlba() async {
+  Future<void> addAlba() async {
     if (albaPay.value.text.isNotEmpty &&
         albaDays.isNotEmpty &&
         albaPay.value.text.isNotEmpty &&
@@ -42,7 +41,7 @@ class AlbaAddController extends GetxController {
           albaPay: albaPay.value.text,
           breakTime: breakTime.value.text,
           holidayPay: holidayPay.value));
-      HomeController.to.initAlbaList();
+      await HomeController.to.initAlbaList();
     } else {
       Get.dialog(Dialog(
         child: Container(
@@ -152,5 +151,17 @@ class AlbaAddController extends GetxController {
   void onBreakTimeChanged(String text) {
     breakTime.value.text = text;
     update();
+  }
+
+  void onStartTimeChanged(DateTime startTime) {
+    this.startTime(startTime);
+  }
+
+  void onEndTimeChanged(DateTime endTime) {
+    this.endTime(endTime);
+  }
+
+  void onDaySelected(DateTime startDate, DateTime focusedDay) {
+    this.startDate(startDate);
   }
 }

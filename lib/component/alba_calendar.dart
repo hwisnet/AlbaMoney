@@ -6,18 +6,18 @@ import 'package:flutter_project/utils/data_utils.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class AlbaCalendar extends StatefulWidget {
+  Map<int, List<AlbaModel>> albaSchedules;
   CalendarFormat calendarFormat;
   DateTime focusedDay;
   DateTime selectedDay;
-  Map<int, List<AlbaModel>> albaSchedules;
   Function(DateTime, DateTime) onDaySelected;
 
   AlbaCalendar(
       {super.key,
+      required this.albaSchedules,
       required this.calendarFormat,
       required this.focusedDay,
       required this.selectedDay,
-      required this.albaSchedules,
       required this.onDaySelected});
 
   @override
@@ -68,7 +68,7 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
               padding: const EdgeInsets.only(bottom: 5),
               child: Builder(builder: (context) {
                 bool hasSchedules = false;
-                for (var schedule in widget.albaSchedules[day.weekday]!) {
+                for (var schedule in widget.albaSchedules[day.weekday] ?? []) {
                   if (day.isAfter(schedule.startDate) ||
                       day.toUtc() ==
                           DateTime.utc(
@@ -111,7 +111,7 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
               padding: const EdgeInsets.only(bottom: 5),
               child: Builder(builder: (context) {
                 bool hasSchedules = false;
-                for (var schedule in widget.albaSchedules[day.weekday]!) {
+                for (var schedule in widget.albaSchedules[day.weekday] ?? []) {
                   if (day.isAfter(schedule.startDate) ||
                       day.toUtc() ==
                           DateTime.utc(
