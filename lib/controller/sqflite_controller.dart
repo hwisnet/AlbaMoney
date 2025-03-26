@@ -49,9 +49,13 @@ class SqfliteController extends GetxService {
 
   Future<void> deleteDB() async {
     // 데이터베이스 경로 가져오기
-    String path = join(await getDatabasesPath(), AlbaDbInfo.table);
+    String path = join(await getDatabasesPath(), 'almoney.db');
 
     // 데이터베이스 삭제
-    await deleteDatabase(path);
+    try {
+      await deleteDatabase(path);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 }

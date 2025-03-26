@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_project/colors/colors.dart';
+import 'package:flutter_project/component/alba_calendar.dart';
+import 'package:flutter_project/component/alba_spinner.dart';
 import 'package:flutter_project/controller/alba_add_controller.dart';
 import 'package:flutter_project/page/home_page.dart';
 import 'package:flutter_project/styles/text_styles.dart';
 import 'package:flutter_project/utils/data_utils.dart';
-import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -16,102 +17,38 @@ class AlbaAddPage extends GetView<AlbaAddController> {
 
   List<String> weekdays = ['일', '월', '화', '수', '목', '금', '토'];
 
-  Widget selectDateCalendar() {
-    return TableCalendar(
-      focusedDay: controller.selectedDate.value,
-      firstDay: DateTime(2020),
-      lastDay: DateTime(2030),
-      locale: 'ko_KR',
-      daysOfWeekHeight: DataUtils.height * 0.05,
-      onDaySelected: (selectedDay, focusedDay) {
-        if (!isSameDay(controller.selectedDate.value, selectedDay)) {
-          controller.selectedDate.value = selectedDay;
-        }
-      },
-      selectedDayPredicate: (selectedDay) {
-        return isSameDay(controller.selectedDate.value, selectedDay);
-      },
-      headerStyle: const HeaderStyle(
-        titleCentered: true,
-        formatButtonVisible: false,
-        leftChevronVisible: false,
-        rightChevronVisible: false,
-      ),
-      calendarStyle: const CalendarStyle(
-        isTodayHighlighted: false,
-        outsideDaysVisible: false,
-      ),
-      calendarBuilders: CalendarBuilders(
-        selectedBuilder: (context, day, focusedDay) {
-          return Center(
-              child: Text('${day.day}',
-                  style: const TextStyle(
-                      color: Colors.blue, fontWeight: FontWeight.bold)));
-        },
-      ),
-    );
-  }
-
-  Widget selectStartTimeSpinner() {
-    return TimePickerSpinner(
-      time: controller.startTime.value,
-      is24HourMode: false,
-      isForce2Digits: true,
-      itemHeight: 60,
-      spacing: 5,
-      onTimeChange: (selectedTime) {
-        controller.startTime.value = selectedTime;
-      },
-    );
-  }
-
-  Widget selectEndTimeSpinner() {
-    return TimePickerSpinner(
-      time: controller.endTime.value,
-      is24HourMode: false,
-      isForce2Digits: true,
-      itemHeight: 60,
-      spacing: 5,
-      onTimeChange: (selectedTime) {
-        controller.endTime.value = selectedTime;
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: _appBar(),
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _albaPlace(),
-            SizedBox(height: DataUtils.height * 0.01),
-            _albaStartDate(),
-            SizedBox(height: DataUtils.height * 0.01),
-            _albaStartTime(),
-            SizedBox(height: DataUtils.height * 0.01),
-            _albaEndTime(),
-            SizedBox(height: DataUtils.height * 0.01),
-            _albaDays(),
-            SizedBox(height: DataUtils.height * 0.01),
-            _albaPay(),
-            SizedBox(height: DataUtils.height * 0.01),
-            _albaBreakTime(),
-            SizedBox(height: DataUtils.height * 0.01),
-            _albaHolidayPay(),
-            SizedBox(height: DataUtils.height * 0.05),
-            _calculateButton(),
-            SizedBox(height: DataUtils.height * 0.01),
-            _description(),
-            SizedBox(
-                height: DataUtils.height * 0.05, child: const WaveDivider()),
-            _calculateResult(),
-          ],
-        ),
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _albaPlace(),
+          SizedBox(height: DataUtils.height * 0.01),
+          _albaStartDate(context: context),
+          SizedBox(height: DataUtils.height * 0.01),
+          _albaStartTime(context: context),
+          SizedBox(height: DataUtils.height * 0.01),
+          _albaEndTime(context: context),
+          SizedBox(height: DataUtils.height * 0.01),
+          _albaDays(),
+          SizedBox(height: DataUtils.height * 0.01),
+          _albaPay(),
+          SizedBox(height: DataUtils.height * 0.01),
+          _albaBreakTime(),
+          SizedBox(height: DataUtils.height * 0.01),
+          _albaHolidayPay(),
+          SizedBox(height: DataUtils.height * 0.05),
+          _calculateButton(),
+          SizedBox(height: DataUtils.height * 0.01),
+          _description(),
+          SizedBox(height: DataUtils.height * 0.05, child: const WaveDivider()),
+          _calculateResult(),
+        ],
       )),
     );
   }
@@ -179,7 +116,7 @@ class AlbaAddPage extends GetView<AlbaAddController> {
     );
   }
 
-  Widget _albaStartDate() {
+  Widget _albaStartDate({required BuildContext context}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: DataUtils.width * 0.05),
       child: Column(
@@ -187,7 +124,40 @@ class AlbaAddPage extends GetView<AlbaAddController> {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text('근무 시작 날짜', style: w500.copyWith(fontSize: 15)),
             GestureDetector(
-              onTap: () => controller.onEditToggle('startDate'),
+              onTap: () {
+                Get.dialog(Dialog(
+                  backgroundColor: Colors.white,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: DataUtils.width * 0.05,
+                        vertical: DataUtils.height * 0.01),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Obx(() => AlbaCalendar(
+                            albaSchedules: const {},
+                            calendarFormat: CalendarFormat.month,
+                            focusedDay: controller.startDate.value,
+                            selectedDay: controller.startDate.value,
+                            onDaySelected: controller.onDaySelected)),
+                        SizedBox(height: DataUtils.height * 0.025),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Text('확인',
+                                    style: w500.copyWith(
+                                        color: main_color, fontSize: 15))),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ));
+              },
               child: Container(
                 width: DataUtils.width * 0.45,
                 height: DataUtils.height * 0.045,
@@ -197,20 +167,17 @@ class AlbaAddPage extends GetView<AlbaAddController> {
                 ),
                 child: Center(
                     child: Obx(() => Text(
-                        DataUtils.dateFormatter(controller.selectedDate.value),
+                        DataUtils.dateFormatter(controller.startDate.value),
                         style: w500.copyWith(fontSize: 15)))),
               ),
             )
           ]),
-          Obx(() => _animatedWidget(
-              toggle: controller.toggle['startDate']!,
-              childWidget: selectDateCalendar()))
         ],
       ),
     );
   }
 
-  Widget _albaStartTime() {
+  Widget _albaStartTime({required BuildContext context}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: DataUtils.width * 0.05),
       child: Column(
@@ -218,7 +185,37 @@ class AlbaAddPage extends GetView<AlbaAddController> {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text('근무 시작 시간', style: w500.copyWith(fontSize: 15)),
             GestureDetector(
-              onTap: () => controller.onEditToggle('startTime'),
+              onTap: () {
+                Get.dialog(Dialog(
+                  backgroundColor: Colors.white,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: DataUtils.width * 0.05,
+                        vertical: DataUtils.height * 0.01),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Obx(() => AlbaSpinner(
+                            time: controller.startTime.value,
+                            onTimeChanged: controller.onStartTimeChanged)),
+                        SizedBox(height: DataUtils.height * 0.025),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Text('확인',
+                                    style: w500.copyWith(
+                                        color: main_color, fontSize: 15))),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ));
+              },
               child: Container(
                 width: DataUtils.width * 0.22,
                 height: DataUtils.height * 0.045,
@@ -233,15 +230,12 @@ class AlbaAddPage extends GetView<AlbaAddController> {
               ),
             )
           ]),
-          Obx(() => _animatedWidget(
-              toggle: controller.toggle['startTime']!,
-              childWidget: selectStartTimeSpinner()))
         ],
       ),
     );
   }
 
-  Widget _albaEndTime() {
+  Widget _albaEndTime({required BuildContext context}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: DataUtils.width * 0.05),
       child: Column(
@@ -249,7 +243,37 @@ class AlbaAddPage extends GetView<AlbaAddController> {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             Text('근무 종료 시간', style: w500.copyWith(fontSize: 15)),
             GestureDetector(
-              onTap: () => controller.onEditToggle('endTime'),
+              onTap: () {
+                Get.dialog(Dialog(
+                  backgroundColor: Colors.white,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: DataUtils.width * 0.05,
+                        vertical: DataUtils.height * 0.01),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Obx(() => AlbaSpinner(
+                            time: controller.endTime.value,
+                            onTimeChanged: controller.onEndTimeChanged)),
+                        SizedBox(height: DataUtils.height * 0.025),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Text('확인',
+                                    style: w500.copyWith(
+                                        color: main_color, fontSize: 15))),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ));
+              },
               child: Container(
                 width: DataUtils.width * 0.22,
                 height: DataUtils.height * 0.045,
@@ -264,9 +288,6 @@ class AlbaAddPage extends GetView<AlbaAddController> {
               ),
             )
           ]),
-          Obx(() => _animatedWidget(
-              toggle: controller.toggle['endTime']!,
-              childWidget: selectEndTimeSpinner()))
         ],
       ),
     );

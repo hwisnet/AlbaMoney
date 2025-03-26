@@ -20,7 +20,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         appBarTheme: const AppBarTheme(backgroundColor: Colors.white),
         scaffoldBackgroundColor: Colors.white,
-        useMaterial3: true,
       ),
       initialBinding: InitBinding(),
       home: const App(),
