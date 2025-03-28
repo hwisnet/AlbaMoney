@@ -30,7 +30,7 @@ class HomePage extends GetView<HomeController> {
                 _monthlyPay(),
                 SizedBox(height: DataUtils.height * 0.01),
                 _monthlyCalendar(),
-                // ElevatedButton(
+                // TextButton(
                 //     onPressed: () async {
                 //       SqfliteController.to.deleteColums();
                 //     },
@@ -93,7 +93,14 @@ class HomePage extends GetView<HomeController> {
           ),
           GestureDetector(
             onTap: () {
-              Get.to(() => const HistoryPage());
+              Get.to(() => Obx(() => HistoryPage(
+                    albaSchedules: controller.albaSchedules,
+                    attendedList: controller.attendedList,
+                    calendarFormat: CalendarFormat.week,
+                    focusedDate: controller.focusedDate.value,
+                    selectedDate: controller.selectedDate.value,
+                    onDateSelected: controller.onDaySelected,
+                  )));
             },
             child: Container(
               alignment: Alignment.center,
@@ -140,11 +147,12 @@ class HomePage extends GetView<HomeController> {
                         return const CircularProgressIndicator();
                       } else {
                         return AlbaCalendar(
+                          albaSchedules: controller.albaSchedules,
+                          attendedList: controller.attendedList,
                           calendarFormat: CalendarFormat.week,
-                          focusedDay: controller.focusedDate.value,
-                          selectedDay: controller.selectedDate.value,
-                          albaSchedules: controller.albaSchedules.value,
-                          onDaySelected: controller.onDaySelected,
+                          focusedDate: controller.focusedDate.value,
+                          selectedDate: controller.selectedDate.value,
+                          onDateSelected: controller.onDaySelected,
                         );
                       }
                     }),
@@ -155,7 +163,8 @@ class HomePage extends GetView<HomeController> {
                       } else {
                         return AlbaCardList(
                             albaSchedules: controller.albaSchedules,
-                            selectedDay: controller.selectedDate.value);
+                            attendedList: controller.attendedList,
+                            selectedDate: controller.selectedDate.value);
                       }
                     }),
                   ],

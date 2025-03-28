@@ -1,43 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_project/colors/colors.dart';
 import 'package:flutter_project/model/alba_model.dart';
+import 'package:flutter_project/model/attendance_model.dart';
 import 'package:flutter_project/styles/text_styles.dart';
+import 'package:flutter_project/utils/alba_utils.dart';
+import 'package:flutter_project/utils/attend_utils.dart';
 import 'package:flutter_project/utils/data_utils.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class AlbaCalendar extends StatefulWidget {
+class AlbaCalendar extends StatelessWidget {
   Map<int, List<AlbaModel>> albaSchedules;
+  List<AttendModel> attendedList;
   CalendarFormat calendarFormat;
-  DateTime focusedDay;
-  DateTime selectedDay;
-  Function(DateTime, DateTime) onDaySelected;
+  DateTime focusedDate;
+  DateTime selectedDate;
+  Function(DateTime, DateTime) onDateSelected;
 
   AlbaCalendar(
       {super.key,
       required this.albaSchedules,
+      required this.attendedList,
       required this.calendarFormat,
-      required this.focusedDay,
-      required this.selectedDay,
-      required this.onDaySelected});
+      required this.focusedDate,
+      required this.selectedDate,
+      required this.onDateSelected});
 
-  @override
-  State<AlbaCalendar> createState() => _AlbaCalendarState();
-}
-
-class _AlbaCalendarState extends State<AlbaCalendar> {
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
       locale: 'ko_KR',
-      calendarFormat: widget.calendarFormat,
+      calendarFormat: calendarFormat,
       daysOfWeekHeight: 30,
-      focusedDay: widget.focusedDay,
-      firstDay: DateTime.utc(2025, 1, 1),
-      lastDay: DateTime.utc(2025, 12, 31),
-      onDaySelected: widget.onDaySelected,
-      selectedDayPredicate: (day) => isSameDay(widget.selectedDay, day),
+      focusedDay: focusedDate,
+      firstDay: DateTime(DateTime.now().year - 1, 1, 1),
+      lastDay: DateTime.utc(DateTime.now().year + 1, 12, 31),
+      onDaySelected: onDateSelected,
+      selectedDayPredicate: (day) => isSameDay(selectedDate, day),
       headerStyle: HeaderStyle(
           formatButtonVisible: false,
+          leftChevronVisible: false,
+          rightChevronVisible: false,
           titleCentered: true,
           titleTextStyle: w500.copyWith(fontSize: 20)),
       calendarStyle: const CalendarStyle(outsideDaysVisible: false),
@@ -67,22 +69,15 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
           child: Padding(
               padding: const EdgeInsets.only(bottom: 5),
               child: Builder(builder: (context) {
-                bool hasSchedules = false;
-                for (var schedule in widget.albaSchedules[day.weekday] ?? []) {
-                  if (day.isAfter(schedule.startDate) ||
-                      day.toUtc() ==
-                          DateTime.utc(
-                              schedule.startDate.year,
-                              schedule.startDate.month,
-                              schedule.startDate.day)) {
-                    hasSchedules = true;
-                  }
-                }
+                bool hasSchedules = AlbaUtils.hasSchedules(albaSchedules, day);
                 return hasSchedules
                     ? Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: main_color,
+                          color: AttendUtils.isAllAttended(
+                                  albaSchedules, attendedList, day)
+                              ? main_color
+                              : sub_grey_color,
                         ),
                         width: 5,
                         height: 5,
@@ -110,22 +105,15 @@ class _AlbaCalendarState extends State<AlbaCalendar> {
           child: Padding(
               padding: const EdgeInsets.only(bottom: 5),
               child: Builder(builder: (context) {
-                bool hasSchedules = false;
-                for (var schedule in widget.albaSchedules[day.weekday] ?? []) {
-                  if (day.isAfter(schedule.startDate) ||
-                      day.toUtc() ==
-                          DateTime.utc(
-                              schedule.startDate.year,
-                              schedule.startDate.month,
-                              schedule.startDate.day)) {
-                    hasSchedules = true;
-                  }
-                }
+                bool hasSchedules = AlbaUtils.hasSchedules(albaSchedules, day);
                 return hasSchedules
                     ? Container(
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: main_color,
+                          color: AttendUtils.isAllAttended(
+                                  albaSchedules, attendedList, day)
+                              ? main_color
+                              : sub_grey_color,
                         ),
                         width: 5,
                         height: 5,

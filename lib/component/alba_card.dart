@@ -5,17 +5,20 @@ import 'package:flutter_project/model/alba_model.dart';
 import 'package:flutter_project/model/attendance_model.dart';
 import 'package:flutter_project/repository/sqflite_repository.dart';
 import 'package:flutter_project/styles/text_styles.dart';
+import 'package:flutter_project/utils/attend_utils.dart';
 import 'package:flutter_project/utils/data_utils.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:table_calendar/table_calendar.dart';
 
-class AlbaCard extends GetView<HomeController> {
+class AlbaCard extends StatelessWidget {
   AlbaModel albaModel;
+  List<AttendModel> attendedList;
+  DateTime selectedDate;
 
   AlbaCard({
     super.key,
     required this.albaModel,
+    required this.attendedList,
+    required this.selectedDate,
   });
 
   @override
@@ -58,34 +61,26 @@ class AlbaCard extends GetView<HomeController> {
               ),
             ],
           ),
-          GestureDetector(
-            onTap: () async {
-              final isAttended = controller.attendList.where((element) =>
-                  element.attendId == albaModel.id &&
-                  isSameDay(element.attendDate.toUtc(),
-                      controller.selectedDate.value.toUtc()));
-
-              if (isAttended.isNotEmpty) {
-                await SqfliteRepository.deleteAttendData(albaModel.id!,
-                    controller.selectedDate.value.toUtc().toIso8601String());
-                await HomeController.to.refreshController();
-              } else {
-                await SqfliteRepository.insertAttendData(AttendModel(
-                    attendId: albaModel.id!,
-                    attendDate: controller.selectedDate.value.toUtc()));
-                await HomeController.to.refreshController();
-              }
-            },
-            child: Builder(builder: (context) {
-              final isAttended = controller.attendList.where((element) =>
-                  element.attendId == albaModel.id &&
-                  isSameDay(element.attendDate.toUtc(),
-                      controller.selectedDate.value.toUtc()));
-              return Icon(Icons.check_circle_outline_rounded,
-                  color: isAttended.isNotEmpty ? main_color : sub_grey_color,
-                  size: DataUtils.width * 0.1);
-            }),
-          )
+          Builder(builder: (context) {
+            final isAttended =
+                AttendUtils.isAttended(albaModel, attendedList, selectedDate);
+            return GestureDetector(
+                onTap: () async {
+                  if (isAttended) {
+                    await SqfliteRepository.deleteAttendData(
+                        albaModel.id!, selectedDate.toUtc().toIso8601String());
+                    await HomeController.to.refreshController();
+                  } else {
+                    await SqfliteRepository.insertAttendData(AttendModel(
+                        attendId: albaModel.id!,
+                        attendDate: selectedDate.toUtc()));
+                    await HomeController.to.refreshController();
+                  }
+                },
+                child: Icon(Icons.check_circle_outline_rounded,
+                    color: isAttended ? main_color : sub_grey_color,
+                    size: DataUtils.width * 0.1));
+          })
         ],
       ),
     );

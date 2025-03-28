@@ -14,7 +14,7 @@ class HomeController extends GetxController {
   Rx<DateTime> selectedDate = DateTime.now().obs;
 
   RxList<AlbaModel> albaList = <AlbaModel>[].obs;
-  RxList<AttendModel> attendList = <AttendModel>[].obs;
+  RxList<AttendModel> attendedList = <AttendModel>[].obs;
   RxMap<int, List<AlbaModel>> albaSchedules = <int, List<AlbaModel>>{
     1: [],
     2: [],
@@ -40,7 +40,7 @@ class HomeController extends GetxController {
         await SqfliteRepository.readAttendData();
 
     albaList(loadedAlbaList);
-    attendList(loadedAttendList);
+    attendedList(loadedAttendList);
 
     Map<int, List<AlbaModel>> tempSchedules = {
       1: [],
