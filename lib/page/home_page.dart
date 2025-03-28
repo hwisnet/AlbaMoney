@@ -18,6 +18,7 @@ class HomePage extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      appBar: _appBar(),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(
@@ -25,19 +26,15 @@ class HomePage extends GetView<HomeController> {
               vertical: DataUtils.height * 0.025),
           child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _header(),
-                SizedBox(height: DataUtils.height * 0.025),
                 _monthlyPay(),
-                SizedBox(height: DataUtils.height * 0.025),
+                SizedBox(height: DataUtils.height * 0.01),
                 _monthlyCalendar(),
-                SizedBox(height: DataUtils.height * 0.025),
-                ElevatedButton(
-                    onPressed: () async {
-                      SqfliteController.to.deleteDB();
-                    },
-                    child: const Text('DB 초기화'))
+                // ElevatedButton(
+                //     onPressed: () async {
+                //       SqfliteController.to.deleteColums();
+                //     },
+                //     child: const Text('DB 초기화'))
               ],
             ),
           ),
@@ -47,45 +44,25 @@ class HomePage extends GetView<HomeController> {
     );
   }
 
-  Widget _bottomNavBar() {
-    final items = [
-      const BottomNavigationBarItem(
-          activeIcon: Icon(
-            Icons.home,
-            color: main_color,
-          ),
-          icon: Icon(Icons.home, color: sub_grey_color),
-          label: '홈'),
-      const BottomNavigationBarItem(
-          activeIcon: Icon(
-            Icons.home,
-            color: main_color,
-          ),
-          icon: Icon(Icons.person, color: sub_grey_color),
-          label: '커뮤니티')
-    ];
-
-    return Obx(() => BottomNavigationBar(
-        onTap: (index) {
-          controller.bottomNavBarIndex(index);
-        },
-        currentIndex: controller.bottomNavBarIndex.value,
-        items: items));
-  }
-
-  Widget _header() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text('알바머니', style: w900.copyWith(color: main_color, fontSize: 30)),
-        const Icon(Icons.notifications, color: main_grey_color, size: 30),
+  AppBar _appBar() {
+    return AppBar(
+      centerTitle: false,
+      title:
+          Text('알바머니', style: w900.copyWith(color: main_color, fontSize: 30)),
+      actions: [
+        Container(
+            padding: EdgeInsets.only(right: DataUtils.width * 0.05),
+            child: GestureDetector(
+              onTap: () {},
+              child: const Icon(Icons.notifications,
+                  color: main_grey_color, size: 30),
+            )),
       ],
     );
   }
 
   Widget _monthlyPay() {
     return Container(
-      width: DataUtils.width,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           boxShadow: const [
@@ -116,12 +93,10 @@ class HomePage extends GetView<HomeController> {
           ),
           GestureDetector(
             onTap: () {
-              Get.to(
-                  () => HistoryPage(albaSchedules: controller.albaSchedules));
+              Get.to(() => const HistoryPage());
             },
             child: Container(
               alignment: Alignment.center,
-              width: DataUtils.width,
               height: DataUtils.height * 0.05,
               decoration: const BoxDecoration(
                   border: Border(top: BorderSide(color: background_grey_color)),
@@ -138,64 +113,93 @@ class HomePage extends GetView<HomeController> {
   }
 
   Widget _monthlyCalendar() {
-    return Container(
-      width: DataUtils.width,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: const [
-            BoxShadow(
-              blurRadius: 5.0,
-              color: background_grey_color,
-              offset: Offset(0, 5),
-              spreadRadius: 0,
-            )
-          ],
-          color: Colors.white),
-      child: Column(
-        children: [
-          Obx(() {
-            if (controller.isLoading.value) {
-              return const CircularProgressIndicator();
-            } else {
-              return AlbaCalendar(
-                calendarFormat: CalendarFormat.week,
-                focusedDay: controller.focusedDay.value,
-                selectedDay: controller.selectedDay.value,
-                albaSchedules: controller.albaSchedules.value,
-                onDaySelected: controller.onDaySelected,
-              );
-            }
-          }),
-          SizedBox(height: DataUtils.height * 0.025),
-          Obx(() {
-            if (controller.isLoading.value) {
-              return const CircularProgressIndicator();
-            } else {
-              return AlbaCardList(
-                albaSchedules: controller.albaSchedules.value,
-                selectedDay: controller.selectedDay.value,
-              );
-            }
-          }),
-          GestureDetector(
-            onTap: () {
-              Get.to(() => SchedulePage(albaList: controller.albaList));
-            },
-            child: Container(
-              alignment: Alignment.center,
-              width: DataUtils.width,
-              height: DataUtils.height * 0.05,
-              decoration: const BoxDecoration(
-                  border: Border(top: BorderSide(color: background_grey_color)),
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(20),
-                      bottomRight: Radius.circular(20))),
-              child: Text('일정 관리하기',
-                  style: w700.copyWith(color: main_color, fontSize: 15)),
-            ),
-          )
-        ],
-      ),
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: const [
+                BoxShadow(
+                  blurRadius: 5.0,
+                  color: background_grey_color,
+                  offset: Offset(0, 5),
+                  spreadRadius: 0,
+                )
+              ],
+              color: Colors.white),
+          child: Column(
+            children: [
+              // 데이터 로딩
+              Container(
+                padding:
+                    EdgeInsets.symmetric(vertical: DataUtils.height * 0.025),
+                child: Column(
+                  children: [
+                    Obx(() {
+                      if (controller.isLoading.value) {
+                        return const CircularProgressIndicator();
+                      } else {
+                        return AlbaCalendar(
+                          calendarFormat: CalendarFormat.week,
+                          focusedDay: controller.focusedDate.value,
+                          selectedDay: controller.selectedDate.value,
+                          albaSchedules: controller.albaSchedules.value,
+                          onDaySelected: controller.onDaySelected,
+                        );
+                      }
+                    }),
+                    SizedBox(height: DataUtils.height * 0.01),
+                    Obx(() {
+                      if (controller.isLoading.value) {
+                        return const CircularProgressIndicator();
+                      } else {
+                        return AlbaCardList(
+                            albaSchedules: controller.albaSchedules,
+                            selectedDay: controller.selectedDate.value);
+                      }
+                    }),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => SchedulePage(albaList: controller.albaList));
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  width: DataUtils.width,
+                  height: DataUtils.height * 0.05,
+                  decoration: const BoxDecoration(
+                      border:
+                          Border(top: BorderSide(color: background_grey_color)),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(20))),
+                  child: Text('일정 관리하기',
+                      style: w700.copyWith(color: main_color, fontSize: 15)),
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: DataUtils.height * 0.01),
+      ],
     );
+  }
+
+  Widget _bottomNavBar() {
+    return Obx(() => BottomNavigationBar(
+            onTap: (index) {
+              controller.bottomNavBarIndex(index);
+            },
+            backgroundColor: Colors.white,
+            currentIndex: controller.bottomNavBarIndex.value,
+            elevation: 1,
+            selectedItemColor: main_color,
+            unselectedItemColor: sub_grey_color,
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.home), label: '홈'),
+              BottomNavigationBarItem(icon: Icon(Icons.person), label: '커뮤니티')
+            ]));
   }
 }

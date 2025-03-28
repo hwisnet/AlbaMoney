@@ -516,20 +516,6 @@ class AlbaAddPage extends GetView<AlbaAddController> {
     );
   }
 
-  Widget _animatedWidget({required bool toggle, required Widget childWidget}) {
-    return AnimatedContainer(
-      curve: Curves.easeInOut,
-      duration: const Duration(milliseconds: 500),
-      child: toggle
-          ? Column(
-              children: [
-                childWidget,
-              ],
-            )
-          : const SizedBox.shrink(),
-    );
-  }
-
   Widget _description() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: DataUtils.width * 0.05),

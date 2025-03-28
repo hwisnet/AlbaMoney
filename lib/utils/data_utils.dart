@@ -6,6 +6,12 @@ class DataUtils {
   static final width = Get.width;
   static final height = Get.height;
 
+  static bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
   static Color getWeekdayColor(int weekday) {
     switch (weekday) {
       case 1:
@@ -64,6 +70,14 @@ class DataUtils {
         return 7;
     }
     return 0;
+  }
+
+  static List<String> sortWeekdays(List<String> weekdays) {
+    List<String> order = ['일', '월', '화', '수', '목', '금', '토'];
+
+    weekdays.sort((a, b) => order.indexOf(a).compareTo(order.indexOf(b)));
+
+    return weekdays;
   }
 
   static DateTime getFirstDateOfCurrentWeek(DateTime currentDay) {

@@ -32,7 +32,7 @@ class AlbaAddController extends GetxController {
         albaDays.isNotEmpty &&
         albaPay.value.text.isNotEmpty &&
         breakTime.value.text.isNotEmpty) {
-      SqfliteRepository.createAlbaData(AlbaModel(
+      SqfliteRepository.insertAlbaData(AlbaModel(
           albaPlace: albaPlace.value.text,
           albaDays: albaDays.join(','),
           startDate: startDate.value,
@@ -41,7 +41,7 @@ class AlbaAddController extends GetxController {
           albaPay: albaPay.value.text,
           breakTime: breakTime.value.text,
           holidayPay: holidayPay.value));
-      await HomeController.to.initAlbaList();
+      await HomeController.to.refreshController();
     } else {
       Get.dialog(Dialog(
         child: Container(
