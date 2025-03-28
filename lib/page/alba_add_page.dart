@@ -136,10 +136,11 @@ class AlbaAddPage extends GetView<AlbaAddController> {
                       children: [
                         Obx(() => AlbaCalendar(
                             albaSchedules: const {},
+                            attendedList: const [],
                             calendarFormat: CalendarFormat.month,
-                            focusedDay: controller.startDate.value,
-                            selectedDay: controller.startDate.value,
-                            onDaySelected: controller.onDaySelected)),
+                            focusedDate: controller.startDate.value,
+                            selectedDate: controller.startDate.value,
+                            onDateSelected: controller.onDaySelected)),
                         SizedBox(height: DataUtils.height * 0.025),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,

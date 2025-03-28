@@ -12,6 +12,10 @@ class DataUtils {
         date1.day == date2.day;
   }
 
+  static DateTime getDate(DateTime date) {
+    return DateTime(date.year, date.month, date.day);
+  }
+
   static Color getWeekdayColor(int weekday) {
     switch (weekday) {
       case 1:

@@ -37,4 +37,21 @@ class SqfliteRepository {
         ? queryResult.map((json) => AttendModel.fromJson(json)).toList()
         : [];
   }
+
+  static Future<List<AttendModel>> readCurrentMonthAttnedData(
+      DateTime currentDate) async {
+    final db = SqfliteController.to.database;
+    final queryResult = await db.query(
+      AttendDbInfo.table,
+      where: '${AttendDbInfo.attendDate} BETWEEN ? AND ?',
+      whereArgs: [
+        '${currentDate.year}-${currentDate.month}-01T00:00:00.000Z',
+        '${currentDate.year}-${currentDate.month}-31T23:59:59.999Z'
+      ],
+    );
+
+    return queryResult.isNotEmpty
+        ? queryResult.map((json) => AttendModel.fromJson(json)).toList()
+        : [];
+  }
 }
