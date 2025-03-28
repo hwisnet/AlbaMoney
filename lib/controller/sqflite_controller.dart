@@ -1,4 +1,5 @@
 import 'package:flutter_project/model/alba_model.dart';
+import 'package:flutter_project/model/attendance_model.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -14,7 +15,7 @@ class SqfliteController extends GetxService {
   }
 
   Future<bool> initDatabase() async {
-    var databasePath = path.join(await getDatabasesPath(), 'almoney.db');
+    var databasePath = path.join(await getDatabasesPath(), 'albaMoney.db');
     _database = await openDatabase(
       databasePath,
       version: 1,
@@ -37,6 +38,14 @@ class SqfliteController extends GetxService {
         ${AlbaDbInfo.holidayPay} integer not null
       )
     ''');
+
+    await db.execute('''
+      create Table ${AttendDbInfo.table} (
+        ${AttendDbInfo.id} integer primary key autoincrement,
+        ${AttendDbInfo.attendId} integer not null,
+        ${AttendDbInfo.attendDate} text not null
+      )
+    ''');
   }
 
   Future<void> deleteTables() async {
@@ -44,12 +53,12 @@ class SqfliteController extends GetxService {
   }
 
   Future<int> deleteColums() async {
-    return await _database.delete(AlbaDbInfo.table);
+    return await _database.delete(AttendDbInfo.table);
   }
 
   Future<void> deleteDB() async {
     // 데이터베이스 경로 가져오기
-    String path = join(await getDatabasesPath(), 'almoney.db');
+    String path = join(await getDatabasesPath(), 'albaMoney.db');
 
     // 데이터베이스 삭제
     try {

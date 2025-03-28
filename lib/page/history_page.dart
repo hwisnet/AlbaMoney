@@ -9,11 +9,8 @@ import 'package:get/get.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HistoryPage extends GetView<HomeController> {
-  Map<int, List<AlbaModel>> albaSchedules;
-
-  HistoryPage({
+  const HistoryPage({
     super.key,
-    required this.albaSchedules,
   });
 
   @override
@@ -26,8 +23,8 @@ class HistoryPage extends GetView<HomeController> {
         children: [
           Obx(() => AlbaCalendar(
               calendarFormat: CalendarFormat.month,
-              focusedDay: controller.focusedDay.value,
-              selectedDay: controller.selectedDay.value,
+              focusedDay: controller.focusedDate.value,
+              selectedDay: controller.selectedDate.value,
               albaSchedules: controller.albaSchedules,
               onDaySelected: controller.onDaySelected)),
           SizedBox(height: DataUtils.height * 0.025),
@@ -50,17 +47,17 @@ class HistoryPage extends GetView<HomeController> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('내역', style: w700.copyWith(fontSize: 20)),
+          Text('내역', style: w500.copyWith(fontSize: 20)),
           ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.only(
                 top: DataUtils.height * 0.01, bottom: DataUtils.height * 0.025),
-            itemCount:
-                albaSchedules[controller.selectedDay.value.weekday]!.length,
+            itemCount: controller
+                .albaSchedules[controller.selectedDate.value.weekday]!.length,
             itemBuilder: (context, index) {
               return _historyCard(
-                albaModel:
-                    albaSchedules[controller.selectedDay.value.weekday]![index],
+                albaModel: controller.albaSchedules[
+                    controller.selectedDate.value.weekday]![index],
               );
             },
           ),

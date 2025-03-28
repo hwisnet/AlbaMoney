@@ -26,7 +26,7 @@ class SchedulePage extends GetView<HomeController> {
         padding: EdgeInsets.symmetric(
             horizontal: DataUtils.width * 0.05,
             vertical: DataUtils.height * 0.025),
-        child: _scheduleList(),
+        child: SingleChildScrollView(child: _scheduleList()),
       )),
     );
   }
@@ -45,7 +45,7 @@ class SchedulePage extends GetView<HomeController> {
               },
               child: Text('새 알바 등록',
                   style: w500.copyWith(color: main_color, fontSize: 15)),
-            ))
+            )),
       ],
     );
   }
@@ -54,15 +54,14 @@ class SchedulePage extends GetView<HomeController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('일정', style: w700.copyWith(fontSize: 20)),
-        GridView.builder(
+        Text('일정', style: w500.copyWith(fontSize: 20)),
+        SizedBox(height: DataUtils.height * 0.01),
+        ListView.separated(
           shrinkWrap: true,
-          padding: EdgeInsets.only(
-              top: DataUtils.height * 0.01, bottom: DataUtils.height * 0.025),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              mainAxisSpacing: DataUtils.height * 0.025,
-              crossAxisCount: 1,
-              childAspectRatio: 2),
+          physics: const NeverScrollableScrollPhysics(),
+          separatorBuilder: (context, index) {
+            return SizedBox(height: DataUtils.height * 0.01);
+          },
           itemCount: albaList.length,
           itemBuilder: (context, index) {
             return _scheduleCard(
@@ -70,13 +69,13 @@ class SchedulePage extends GetView<HomeController> {
             );
           },
         ),
+        SizedBox(height: DataUtils.height * 0.01),
       ],
     );
   }
 
   Widget _scheduleCard({required AlbaModel albaModel}) {
     return Container(
-      height: DataUtils.height * 0.2,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           boxShadow: const [
@@ -89,53 +88,58 @@ class SchedulePage extends GetView<HomeController> {
           ],
           color: Colors.white),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: DataUtils.width * 0.05),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    albaModel.albaPlace,
-                    style: w700.copyWith(fontSize: 25),
-                  ),
-                  SizedBox(height: DataUtils.height * 0.005),
-                  SizedBox(
-                    height: DataUtils.width * 0.075,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        padding: EdgeInsets.zero,
-                        itemCount: albaModel.albaDayList.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            alignment: Alignment.center,
-                            margin:
-                                EdgeInsets.only(right: DataUtils.width * 0.01),
-                            width: DataUtils.width * 0.075,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: main_color),
-                                borderRadius: BorderRadius.circular(5),
-                                shape: BoxShape.rectangle),
-                            child: Text(
-                              albaModel.albaDayList[index],
-                              style: w700.copyWith(color: main_color),
-                            ),
-                          );
-                        }),
-                  ),
-                  SizedBox(height: DataUtils.height * 0.001),
-                  Text(
-                      '${DataUtils.timeFormatter(albaModel.startTime)} - ${DataUtils.timeFormatter(albaModel.endTime)}',
-                      style: w500),
-                  SizedBox(height: DataUtils.height * 0.001),
-                  Text('시급 ${albaModel.albaPay}원', style: w500)
-                ],
-              ),
+          Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: DataUtils.width * 0.05,
+                vertical: DataUtils.height * 0.025),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  albaModel.albaPlace,
+                  style: w700.copyWith(fontSize: 30),
+                ),
+                SizedBox(height: DataUtils.height * 0.01),
+                SizedBox(
+                  height: DataUtils.width * 0.075,
+                  child: ListView.separated(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      separatorBuilder: (context, index) {
+                        return SizedBox(width: DataUtils.width * 0.01);
+                      },
+                      padding: EdgeInsets.zero,
+                      itemCount: albaModel.albaDayList.length,
+                      itemBuilder: (context, index) {
+                        final weekdays =
+                            DataUtils.sortWeekdays(albaModel.albaDayList);
+                        return Container(
+                          alignment: Alignment.center,
+                          width: DataUtils.width * 0.075,
+                          height: DataUtils.width * 0.075,
+                          decoration: BoxDecoration(
+                              border: Border.all(color: main_color),
+                              borderRadius: BorderRadius.circular(5),
+                              shape: BoxShape.rectangle),
+                          child: Text(
+                            weekdays[index],
+                            style:
+                                w700.copyWith(color: main_color, fontSize: 15),
+                          ),
+                        );
+                      }),
+                ),
+                SizedBox(height: DataUtils.height * 0.001),
+                Text(
+                    '${DataUtils.timeFormatter(albaModel.startTime)} - ${DataUtils.timeFormatter(albaModel.endTime)}',
+                    style: w500.copyWith(fontSize: 15)),
+                SizedBox(height: DataUtils.height * 0.001),
+                Text('시급 ${albaModel.albaPay}원',
+                    style: w500.copyWith(fontSize: 15))
+              ],
             ),
           ),
           Row(
@@ -147,7 +151,7 @@ class SchedulePage extends GetView<HomeController> {
                 },
                 child: Container(
                   alignment: Alignment.center,
-                  width: DataUtils.width * 0.45,
+                  width: DataUtils.width * 0.445,
                   height: DataUtils.height * 0.05,
                   decoration: const BoxDecoration(
                     border: Border(
@@ -160,8 +164,21 @@ class SchedulePage extends GetView<HomeController> {
                 ),
               ),
               Container(
+                height: DataUtils.height * 0.05,
+                decoration: const BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: background_grey_color),
+                  ),
+                ),
+                child: VerticalDivider(
+                  width: DataUtils.width * 0.01,
+                  thickness: 1,
+                  color: background_grey_color,
+                ),
+              ),
+              Container(
                 alignment: Alignment.center,
-                width: DataUtils.width * 0.45,
+                width: DataUtils.width * 0.445,
                 height: DataUtils.height * 0.05,
                 decoration: const BoxDecoration(
                   border: Border(
